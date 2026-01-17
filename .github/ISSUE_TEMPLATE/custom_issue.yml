@@ -1,0 +1,34 @@
+name: Custom Issue Template
+description: Describe the current state, desired state, and deliverables for this issue.
+title: "[Short Description] "
+labels: []
+assignees: []
+body:
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: Describe how things are working right now.
+      placeholder: Currently, the system does X...
+    validations:
+      required: true
+
+  - type: textarea
+    id: desired-state
+    attributes:
+      label: Desired State
+      description: Describe how things should work after this issue is resolved.
+      placeholder: The system should do Y...
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables
+      description: List specific items that need to be delivered.
+      value: |
+        - [ ] Item 1
+        - [ ] Item 2
+    validations:
+      required: true

@@ -14,9 +14,9 @@ jobs:
           script: |
             const body = context.payload.issue.body || "";
             const requiredSections = [
-              "## Current State",
-              "## Desired State",
-              "## Deliverables"
+              "### Current State",
+              "### Desired State",
+              "### Deliverables"
             ];
 
             const missingSections = requiredSections.filter(section => !body.includes(section));
