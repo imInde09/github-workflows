@@ -23,6 +23,7 @@ This repository serves as a collection of reusable and interesting GitHub Action
   - Automatically scans on `push` and `pull_request` to the main branch, as well as on a weekly schedule.
   - Currently configured to scan **JavaScript**, but can be easily extended to support other languages like Python, Java, Go, etc.
   - Helps catch issues like SQL injection, XSS, and dangerous data flow early in the development cycle.
+  - **Note**: Ensure "Code Scanning" is enabled in your repository settings (Settings > Code security and analysis).
 
 ### 4. Automation
 
