@@ -1,0 +1,32 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for Linked Issue
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const body = context.payload.pull_request.body || "";
+            // Regex to match "Fixes #123", "Closes #123", "Resolves #123" etc. or just linked issue url
+            // GitHub automatically links issues if you use keywords, but here we enforce it in text.
+            // A simple check is to look for handling keywords or issue URL.
+            const issueRegex = /(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#\d+/i;
+
+            if (!issueRegex.test(body)) {
+              core.setFailed("PR description must contain a linked issue (e.g., 'Fixes #123').");
+            }
+
+      - name: Check for Labels
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels;
+            if (labels.length === 0) {
+              core.setFailed("PR must have at least one label.");
+            }

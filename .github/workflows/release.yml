@@ -1,0 +1,49 @@
+name: Release Management
+
+on:
+  push:
+    branches:
+      - uat
+      - prod
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Determine Environment and Version
+        id: versioning
+        run: |
+          # Simple versioning strategy based on timestamp for demo purposes
+          # In a real scenario, you usually read package.json or use a tagging strategy
+          TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          SHORT_SHA=$(git rev-parse --short HEAD)
+
+          if [[ "${GITHUB_REF}" == "refs/heads/uat" ]]; then
+             echo "env_suffix=uat" >> $GITHUB_OUTPUT
+             echo "version=1.0.${TIMESTAMP}-uat" >> $GITHUB_OUTPUT
+             echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == "refs/heads/prod" ]]; then
+             echo "env_suffix=prod" >> $GITHUB_OUTPUT
+             echo "version=1.0.${TIMESTAMP}-prod" >> $GITHUB_OUTPUT
+             echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          else
+             echo "Unknown branch"
+             exit 1
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.versioning.outputs.version }}
+          name: Release ${{ steps.versioning.outputs.version }}
+          draft: false
+          prerelease: ${{ steps.versioning.outputs.is_prerelease }}
+          generate_release_notes: true
